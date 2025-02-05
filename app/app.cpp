@@ -1,11 +1,10 @@
-#include <cstdlib>
-#include "MyUtil.h"
 #include "add.h"
+#include <iostream>
+
 
 int main()
 {
 	int result = add(17, 23);
-	print(result);
-	
+	std::cout << "The result is: " << result << std::endl;
 	return EXIT_SUCCESS;
 }
