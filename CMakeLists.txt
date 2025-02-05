@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.16.2 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.28)
 
-set(APP_NAME MultiFiles)
+set(APP_NAME Dummy_Project)
 
 project(${APP_NAME} LANGUAGES CXX)
 
