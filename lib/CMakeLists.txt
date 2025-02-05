@@ -1,0 +1,2 @@
+add_subdirectory(MathLib)
+add_subdirectory(MyUtils)
