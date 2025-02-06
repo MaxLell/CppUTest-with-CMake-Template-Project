@@ -1,3 +1,5 @@
+set(TEST_NAME run_all_tests)
+
 ################################################################
 # CppUTest install
 include(FetchContent)
@@ -14,10 +16,24 @@ FetchContent_MakeAvailable(CppUTest)
 
 set(TEST_RUNNER ${CMAKE_CURRENT_SOURCE_DIR}/test_utils/test_runner.cpp)
 
-# Add all subdirectories of the test folder that have a CMakeLists.txt file to be compiled as individual test executables
-file(GLOB SUBDIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/*)
-foreach(subdir ${SUBDIRS})
-    if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${subdir} AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/CMakeLists.txt)
-        add_subdirectory(${subdir})
+set(TEST_SOURCES)
+
+# add_executable(${TEST_NAME} ${TEST_RUNNER})
+
+# This section does multiple things
+# 1. It fetches all the folders in which there are test files (these folder both contain a source and a CMakeFile)
+# 2. It adds these folders (add_subdirctory) and therefore executes its internal CMakeFile. This CMakeFile builds
+#    an executable of the current test and also creates a library which can be linked to the run_all_tests binary
+#    later in this CMakeFile
+file(GLOB ALL_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/*)
+foreach(subdir ${ALL_FILES})
+    if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${subdir})
+        if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/CMakeLists.txt)
+            add_subdirectory(${subdir})
+            set(TEST_SOURCES ${TEST_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/${subdir}.cpp)
+        endif()
     endif()
 endforeach()
+
+add_executable(${TEST_NAME} ${TEST_RUNNER} ${TEST_SOURCES})
+target_link_libraries(${TEST_NAME} PRIVATE CppUTest CppUTestExt ${APP_LIB_NAME})
