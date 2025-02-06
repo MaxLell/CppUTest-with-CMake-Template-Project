@@ -13,4 +13,4 @@ add_subdirectory(lib)
 target_link_libraries(${APP_NAME} PRIVATE ${APP_LIB_NAME})
 
 # For the tests
-add_subdirectory(test)
+add_subdirectory(tests)
